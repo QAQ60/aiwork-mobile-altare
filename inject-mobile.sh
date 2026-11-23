@@ -49,6 +49,12 @@ cat > /mobile-fix.css <<'CSSEOF'
 
   /* 7. 积分看板账号/分组下拉浮层定位溢出屏幕左侧，改为左对齐 */
   .absolute.right-0.z-30 { left: 0 !important; right: auto !important; }
+
+  /* 8. API 管理弹窗：Tab 栏 7 个按钮横向滚动（不再挤成重叠文字） */
+  .mt-4.flex.items-center.gap-1.border-b { overflow-x: auto !important; flex-wrap: nowrap !important; -webkit-overflow-scrolling: touch; }
+  .mt-4.flex.items-center.gap-1.border-b > button { flex: 0 0 auto !important; white-space: nowrap !important; padding-left: .75rem !important; padding-right: .75rem !important; font-size: 13px !important; }
+  /* 内容区高度改为手机可用高度（用属性包含匹配，避免 [] 转义问题） */
+  [class*="calc(100vh"] { height: calc(100dvh - 300px) !important; min-height: 200px !important; }
 }
 </style>
 CSSEOF
