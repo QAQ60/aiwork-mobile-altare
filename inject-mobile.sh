@@ -11,6 +11,7 @@ cat > /mobile-fix.css <<'CSSEOF'
 <style>
 /* MOBILE-FIX-INJECTED */
 @media (max-width: 767px) {
+  /* 1. 顶部操作按钮组：允许换行，不再撑破整页 */
   .mb-5.flex.items-end.justify-between { flex-wrap: wrap !important; }
   .mb-5.flex.items-end.justify-between .flex.items-center.gap-2 {
     flex-wrap: wrap !important; width: 100% !important;
@@ -19,13 +20,31 @@ cat > /mobile-fix.css <<'CSSEOF'
   .mb-5.flex.items-end.justify-between .btn-outline {
     padding-left: .55rem !important; padding-right: .55rem !important; font-size: 12px !important;
   }
+
+  /* 2. 表格在卡片内部横向滚动，不再撑宽整页 */
   .card.overflow-hidden { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+
+  /* 3. grid/flex 子项允许收缩，修复环境配置页 464px 撑宽 */
+  .grid > *, .gridcard, [class*="grid-cols"] > * { min-width: 0 !important; }
+  .card.p-4 { min-width: 0 !important; max-width: 100% !important; }
+  .rounded-lg.bg-slate-50, .rounded-lg.bg-zinc-900 { min-width: 0 !important; max-width: 100% !important; }
+  input[type="range"] { max-width: 100% !important; }
+
+  /* 4. 通用 flex 行换行 */
   .flex.items-center.gap-2 { flex-wrap: wrap; }
+
+  /* 5. 弹窗（帮助等）：限制最大高度 + 内容可上下滚动，修复"上下滑不了" */
+  .fixed.inset-0.z-50 { overflow-y: auto !important; -webkit-overflow-scrolling: touch; align-items: flex-start !important; }
+  .fixed.inset-0.z-50 > .card,
+  .fixed.inset-0.z-50 .card.relative {
+    max-height: calc(100dvh - 2rem) !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 </style>
 CSSEOF
 
-# 遇到 </head> 行之前，先把 CSS 文件内容整个打印出来
 awk '
   /<\/head>/ {
     while ((getline line < "/mobile-fix.css") > 0) print line
