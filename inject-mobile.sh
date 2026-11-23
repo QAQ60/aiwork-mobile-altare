@@ -41,6 +41,14 @@ cat > /mobile-fix.css <<'CSSEOF'
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
   }
+
+  /* 6. 资源调度页 grid-cols-12 手机上改单列，模型 ID 不再被挤成半宽 */
+  .grid.grid-cols-12 { display: flex !important; flex-direction: column !important; }
+  .grid.grid-cols-12 > * { width: 100% !important; max-width: 100% !important; }
+  .col-span-6, [class*="col-span-"] { width: 100% !important; max-width: 100% !important; }
+
+  /* 7. 积分看板账号/分组下拉浮层定位溢出屏幕左侧，改为左对齐 */
+  .absolute.right-0.z-30 { left: 0 !important; right: auto !important; }
 }
 </style>
 CSSEOF
