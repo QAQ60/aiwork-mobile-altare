@@ -53,8 +53,16 @@ cat > /mobile-fix.css <<'CSSEOF'
   /* 8. API 管理弹窗：Tab 栏 7 个按钮横向滚动（不再挤成重叠文字） */
   .mt-4.flex.items-center.gap-1.border-b { overflow-x: auto !important; flex-wrap: nowrap !important; -webkit-overflow-scrolling: touch; }
   .mt-4.flex.items-center.gap-1.border-b > button { flex: 0 0 auto !important; white-space: nowrap !important; padding-left: .75rem !important; padding-right: .75rem !important; font-size: 13px !important; }
-  /* 内容区高度改为手机可用高度（用属性包含匹配，避免 [] 转义问题） */
-  [class*="calc(100vh"] { height: calc(100dvh - 300px) !important; min-height: 200px !important; }
+  /* 内容区高度改为手机可用高度（排除弹窗的 max-h-[calc，避免与第9组冲突） */
+  [class*="h-[calc(100vh"]:not([class*="max-h-[calc"]) { height: calc(100dvh - 300px) !important; min-height: 200px !important; }
+
+  /* 9. 白名单等二级子弹窗：修复被主弹窗裁切/高度不足看不到内容 */
+  /* 主弹窗 body（max-h）在手机上给足高度，内容可滚 */
+  [class*="max-h-[calc(100vh"] { max-height: calc(100dvh - 7rem) !important; min-height: 240px !important; height: auto !important; }
+  /* 子弹窗内模型列表给足高度 */
+  .max-h-72 { max-height: 42vh !important; }
+  /* 让后渲染的（二级）弹窗层级更高，避免被主弹窗盖住 */
+  .fixed.inset-0.z-50 ~ .fixed.inset-0.z-50 { z-index: 60 !important; }
 }
 </style>
 CSSEOF
